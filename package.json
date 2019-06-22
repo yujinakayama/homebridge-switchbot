@@ -8,5 +8,8 @@
   ],
   "engines": {
     "homebridge": ">= 0.4"
+  },
+  "dependencies": {
+    "switchbot": ">= 0.0.4"
   }
 }
