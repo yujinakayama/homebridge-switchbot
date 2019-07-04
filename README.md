@@ -2,6 +2,10 @@
 
 A [Homebridge](https://github.com/nfarina/homebridge) plugin for [SwitchBot](https://www.switch-bot.com).
 
+## Requirements
+
+* Currently only Linux is supported
+* `gatttool` needs to be installed
 
 ## Installation
 
