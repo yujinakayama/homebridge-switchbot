@@ -28,3 +28,5 @@ Find your SwitchBot's MAC address (BLE MAC) with the official iOS/Android app, a
     ]
 }
 ```
+
+Currently only SwitchBot's [light switch mode](https://www.youtube.com/watch?v=Jy_0bfCF8_M) (stateful switch with push/pull) is supported.
