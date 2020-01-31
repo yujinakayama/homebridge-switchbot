@@ -1,0 +1,24 @@
+{
+  "pluginAlias": "SwitchBot",
+  "pluginType": "accessory",
+  "singular": false,
+  "headerDisplay": "A [Homebridge](https://github.com/nfarina/homebridge) plugin for [SwitchBot](https://www.switch-bot.com).",
+  "footerDisplay": "Currently only SwitchBot's [light switch mode](https://www.youtube.com/watch?v=Jy_0bfCF8_M) (stateful switch with push/pull) is supported.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "placeholder": "Wall Switch",
+        "required": true
+      },
+        "macAddress": {
+        "title": "Mac Address",
+        "type": "string",
+        "pattern": "^([a-f0-9]{2}:){5}[a-f0-9]{2}$",
+        "required": true
+      }
+    }
+  }
+}
