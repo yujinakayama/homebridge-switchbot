@@ -24,6 +24,14 @@ const Switchbot = address => {
     }
   });
 
+  const getState = () => {
+    const advertisement = peripheral.advertisement;
+    const serviceData = advertisement.serviceData;
+    const buf = serviceData[0].data;
+    const byte1 = buf.readUInt8(1);
+    return byte1 & 0b01000000 ? true : false;
+  };
+
   const exec = command => {
     new Promise((resolve, reject) => {
       peripheral.connect(error => {
@@ -43,10 +51,16 @@ const Switchbot = address => {
   };
 
   const turnOn = () => {
+    if (!getState()) {
+      return Promise.resolve();
+    }
     return exec('turnOn');
   };
 
   const turnOff = () => {
+    if (getState()) {
+      return Promise.resolve();
+    }
     return exec('turnOff');
   };
 
