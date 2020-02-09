@@ -1,4 +1,4 @@
-const Switchbot = require('switchbot');
+const Switchbot = require('./switchbot');
 
 let Service;
 let Characteristic;
