@@ -19,7 +19,7 @@ const Switchbot = address => {
   });
 
   noble.on('discover', discoveredPeripheral => {
-    if (discoveredPeripheral.address === address) {
+    if (discoveredPeripheral.address.match(new RegExp(address.replace(/:/g, '.'), 'i'))) {
       peripheral = discoveredPeripheral;
     }
   });
