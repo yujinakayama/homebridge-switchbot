@@ -35,27 +35,19 @@ class SwitchBotAccessory {
     callback(null, this.active);
   }
 
-  isStateLess() {
-    const { stateLess } = this.config;
-    return !!stateLess;
-  }
-
   async setOn(value, callback) {
     const humanState = value ? 'on' : 'off';
     this.log(`Turning ${humanState}...`);
 
     try {
-      const action = value ? this.switchbot.turnOn : this.switchbot.turnOff;
-      await action();
-      this.active = value;
-      this.log(`Turned ${humanState}`);
-      if (this.isStateLess()) {
-        setTimeout(async () => {
-          await this.switchbot.turnOff();
-          this.active = false;
-          callback();
-        }, 1000);
+      if (this.config.stateLess) {
+        await this.switchbot.press();
+        this.active = false;
+        callback();
       } else {
+        const action = value ? this.switchbot.turnOn : this.switchbot.turnOff;
+        await action();
+        this.active = value;
         callback();
       }
     } catch (error) {
