@@ -50,7 +50,7 @@ class SwitchBotAccessory {
       this.active = value;
       this.log(`Turned ${humanState}`);
       if (this.isStateLess()) {
-        setTimeout(() => {
+        setTimeout(async () => {
           await this.switchbot.turnOff();
           this.active = false;
           callback();
