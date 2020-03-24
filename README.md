@@ -23,13 +23,12 @@ Find your SwitchBot's MAC address (BLE MAC) with the official iOS/Android app, a
         {
             "accessory": "SwitchBot",
             "name": "Wall Switch",
-            "macAddress": "01:23:45:67:89:AB"
+            "macAddress": "01:23:45:67:89:AB",
+            "stateLess": true // Default to false
         }
     ]
 }
 ```
-
-Currently only SwitchBot's [light switch mode](https://www.youtube.com/watch?v=Jy_0bfCF8_M) (stateful switch with push/pull) is supported.
 
 You can change the accessory type to light or fan in the Home app:
 

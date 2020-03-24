@@ -12,6 +12,7 @@ module.exports = (homebridge) => {
 class SwitchBotAccessory {
   constructor(log, config) {
     this.log = log;
+    this.config = config;
     this.switchbot = Switchbot(config.macAddress);
     this.active = false;
   }
@@ -34,6 +35,11 @@ class SwitchBotAccessory {
     callback(null, this.active);
   }
 
+  isStateLess() {
+    const { stateLess } = config;
+    return !!stateLess;
+  }
+
   async setOn(value, callback) {
     const humanState = value ? 'on' : 'off';
     this.log(`Turning ${humanState}...`);
@@ -43,6 +49,11 @@ class SwitchBotAccessory {
       await action();
       this.active = value;
       this.log(`Turned ${humanState}`);
+      if (this.isStateLess()) {
+        setTimeout(() => {
+          this.switchbot.turnOff()
+        }, 1000);
+      }
       callback();
     } catch (error) {
       this.log(`Failed turning ${humanState}`);
