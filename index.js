@@ -22,33 +22,35 @@ class SwitchBotAccessory {
     accessoryInformationService
       .setCharacteristic(Characteristic.Manufacturer, 'Yuji Nakayama')
 
-    const switchService = new Service.Switch();
-    switchService
+    this.switchService = new Service.Switch();
+    this.switchService
       .getCharacteristic(Characteristic.On)
-        .on('get', this.get.bind(this))
-        .on('set', this.set.bind(this));
+        .on('get', this.getStatus.bind(this))
+        .on('set', this.setStatus.bind(this));
 
-    this.switchService = switchService;
-
-    return [accessoryInformationService, switchService];
+    return [accessoryInformationService, this.switchService];
   }
 
-  get(callback) {
+  resetSwitchWithTimeout() {
+    setTimeout(() => {
+      this.switchService.setCharacteristic(Characteristic.On, false);
+    }, 1000);
+  }
+
+  getStatus(callback) {
     callback(null, this.active);
   }
 
-  async set(value, callback) {
+  async setStatus(value, callback) {
     const humanState = value ? 'on' : 'off';
     this.log(`Turning ${humanState}...`);
 
     try {
       if (this.config.stateLess) {
+        this.active = false;
         await this.switchbot.press();
-        this.active = value;
+        this.resetSwitchWithTimeout();
         callback();
-        setTimeout(() => {
-          this.switchService.setCharacteristic(Characteristic.On, false);
-        }, 1000);
       } else {
         const action = value ? this.switchbot.turnOn : this.switchbot.turnOff;
         await action();
