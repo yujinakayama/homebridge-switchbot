@@ -48,14 +48,11 @@ class SwitchBotAccessory {
     try {
       if (this.config.stateLess) {
         if (value) {
-          this.active = false;
           await this.switchbot.press();
           this.resetSwitchWithTimeout();
-          callback();
-        } else {
-          this.active = false;
-          callback();
         }
+        this.active = false;
+        callback();
       } else {
         const action = value ? this.switchbot.turnOn : this.switchbot.turnOff;
         await action();
