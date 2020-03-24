@@ -28,6 +28,8 @@ class SwitchBotAccessory {
         .on('get', this.get.bind(this))
         .on('set', this.set.bind(this));
 
+    this.switchService = switchService;
+
     return [accessoryInformationService, switchService];
   }
 
@@ -46,7 +48,7 @@ class SwitchBotAccessory {
         callback();
         setTimeout(() => {
           this.active = false;
-          this.homebridgeService.setCharacteristic(Characteristic.On, false);
+          this.switchService.setCharacteristic(Characteristic.On, false);
         }, 1000);
       } else {
         const action = value ? this.switchbot.turnOn : this.switchbot.turnOff;
