@@ -51,12 +51,15 @@ class SwitchBotAccessory {
       this.log(`Turned ${humanState}`);
       if (this.isStateLess()) {
         setTimeout(() => {
-          this.switchbot.turnOff()
+          await this.switchbot.turnOff();
+          this.active = false;
+          callback();
         }, 1000);
+      } else {
+        callback();
       }
-      callback();
     } catch (error) {
-      this.log(`Failed turning ${humanState}`);
+      this.log(`Failed turning ${humanState}`, error);
       callback(`Failed turning ${humanState}`);
     }
   }
