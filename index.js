@@ -36,7 +36,7 @@ class SwitchBotAccessory {
   }
 
   isStateLess() {
-    const { stateLess } = config;
+    const { stateLess } = this.config;
     return !!stateLess;
   }
 
