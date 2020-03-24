@@ -25,25 +25,29 @@ class SwitchBotAccessory {
     const switchService = new Service.Switch();
     switchService
       .getCharacteristic(Characteristic.On)
-        .on('get', this.getOn.bind(this))
-        .on('set', this.setOn.bind(this));
+        .on('get', this.get.bind(this))
+        .on('set', this.set.bind(this));
 
     return [accessoryInformationService, switchService];
   }
 
-  getOn(callback) {
+  get(callback) {
     callback(null, this.active);
   }
 
-  async setOn(value, callback) {
+  async set(value, callback) {
     const humanState = value ? 'on' : 'off';
     this.log(`Turning ${humanState}...`);
 
     try {
       if (this.config.stateLess) {
         await this.switchbot.press();
-        this.active = false;
+        this.active = value;
         callback();
+        setTimeout(() => {
+          this.active = false;
+          this.homebridgeService.setCharacteristic(Characteristic.On, false);
+        }, 1000);
       } else {
         const action = value ? this.switchbot.turnOn : this.switchbot.turnOff;
         await action();
