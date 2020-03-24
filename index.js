@@ -47,7 +47,6 @@ class SwitchBotAccessory {
         this.active = value;
         callback();
         setTimeout(() => {
-          this.active = false;
           this.switchService.setCharacteristic(Characteristic.On, false);
         }, 1000);
       } else {
