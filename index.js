@@ -14,6 +14,8 @@ class SwitchBotAccessory {
     this.log = log;
     this.switchbot = Switchbot(config.macAddress);
     this.active = false;
+    this.retry = config.retry || 5;
+    this.retry_interval = config.retry_interval || 500;
   }
 
   getServices() {
@@ -24,8 +26,8 @@ class SwitchBotAccessory {
     const switchService = new Service.Switch();
     switchService
       .getCharacteristic(Characteristic.On)
-        .on('get', this.getOn.bind(this))
-        .on('set', this.setOn.bind(this));
+      .on('get', this.getOn.bind(this))
+      .on('set', this.setOn.bind(this));
 
     return [accessoryInformationService, switchService];
   }
@@ -38,15 +40,35 @@ class SwitchBotAccessory {
     const humanState = value ? 'on' : 'off';
     this.log(`Turning ${humanState}...`);
 
-    try {
-      const action = value ? this.switchbot.turnOn : this.switchbot.turnOff;
-      await action();
-      this.active = value;
-      this.log(`Turned ${humanState}`);
-      callback();
-    } catch (error) {
-      this.log(`Failed turning ${humanState}`);
-      callback(`Failed turning ${humanState}`);
+    var errorCount = 0;
+    var successFlag = false
+    while (true) {
+      try {
+        const action = value ? this.switchbot.turnOn : this.switchbot.turnOff;
+        await action();
+        this.active = value;
+        this.log(`Turned ${humanState}`);
+        callback();
+        successFlag = true
+      } catch (error) {
+        errorCount++;
+        this.log(`Error count: ${errorCount}`);
+      }
+
+      if (successFlag) {
+        break;
+      }
+
+      const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      await _sleep(this.retry_interval);
+
+      if (this.retry < errorCount) {
+        this.log(`Failed turning ${humanState}`);
+        callback(`Failed turning ${humanState}`);
+        break;
+      } else {
+        this.log(`Retry`);
+      }
     }
   }
 }
